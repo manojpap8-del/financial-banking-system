@@ -256,7 +256,7 @@ Authorization: Bearer <JWT_TOKEN>
 
 # 📸 Screenshots
 
-You can add screenshots here.
+Screenshots will be added soon.
 
 ```
 Landing Page
