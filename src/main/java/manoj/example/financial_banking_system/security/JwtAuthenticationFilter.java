@@ -5,12 +5,12 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import manoj.example.financial_banking_system.service.JwtService;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Component;
-import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.stereotype.Component;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
@@ -35,42 +35,70 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             FilterChain filterChain)
             throws ServletException, IOException {
 
-        // Read Authorization Header
         final String authHeader = request.getHeader("Authorization");
 
-        // If header is missing or doesn't start with Bearer, continue the chain
+        System.out.println("================================== - JwtAuthenticationFilter.java:40");
+        System.out.println("Request URI : - JwtAuthenticationFilter.java:41" + request.getRequestURI());
+        System.out.println("Authorization Header : - JwtAuthenticationFilter.java:42" + authHeader);
+
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+
+            System.out.println("No JWT Token Found - JwtAuthenticationFilter.java:46");
+
             filterChain.doFilter(request, response);
             return;
         }
 
-        // Remove "Bearer " prefix
-        final String jwt = authHeader.substring(7);
+        try {
 
-        // Extract email from JWT
-        final String userEmail = jwtService.extractEmail(jwt);
+            String jwt = authHeader.substring(7);
 
-        // Load user from database through Spring Security service
-        UserDetails userDetails =
-                customUserDetailsService.loadUserByUsername(userEmail);
+            System.out.println("JWT : - JwtAuthenticationFilter.java:56" + jwt);
 
-                if (jwtService.isTokenValid(jwt, userDetails.getUsername())) {
+            String email = jwtService.extractEmail(jwt);
 
-    UsernamePasswordAuthenticationToken authToken =
-            new UsernamePasswordAuthenticationToken(
-                    userDetails,
-                    null,
-                    userDetails.getAuthorities()
-            );
+            System.out.println("Email : - JwtAuthenticationFilter.java:60" + email);
 
-    authToken.setDetails(
-            new WebAuthenticationDetailsSource().buildDetails(request)
-    );
+            UserDetails userDetails =
+                    customUserDetailsService.loadUserByUsername(email);
 
-    SecurityContextHolder.getContext().setAuthentication(authToken);
-}
+            System.out.println("User Found : - JwtAuthenticationFilter.java:65" + userDetails.getUsername());
 
-        // Authentication logic will be added in the next step
+            boolean valid =
+                    jwtService.isTokenValid(jwt, userDetails.getUsername());
+
+            System.out.println("Token Valid : - JwtAuthenticationFilter.java:70" + valid);
+
+            if (valid) {
+
+                UsernamePasswordAuthenticationToken authToken =
+                        new UsernamePasswordAuthenticationToken(
+                                userDetails,
+                                null,
+                                userDetails.getAuthorities());
+
+                authToken.setDetails(
+                        new WebAuthenticationDetailsSource()
+                                .buildDetails(request));
+
+                SecurityContextHolder.getContext()
+                        .setAuthentication(authToken);
+
+                System.out.println("Authentication SUCCESS - JwtAuthenticationFilter.java:87");
+
+            } else {
+
+                System.out.println("Authentication FAILED - JwtAuthenticationFilter.java:91");
+
+            }
+
+        } catch (Exception e) {
+
+            System.out.println("JWT ERROR : - JwtAuthenticationFilter.java:97" + e.getMessage());
+
+        }
+
+        System.out.println("================================== - JwtAuthenticationFilter.java:101");
 
         filterChain.doFilter(request, response);
     }

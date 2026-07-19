@@ -71,18 +71,19 @@ public class User {
     public String getRole() {
         return role;
     }
+
     public Account getAccount() {
-    return account;
-}
+        return account;
+    }
 
     public void setAccount(Account account) {
-    this.account = account;
-}
+        this.account = account;
+    }
 
-    public void setRole(String role) {  // constructor
+    public void setRole(String role) { // constructor
         this.role = role;
     }
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-     private Account account;
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Account account;
 }

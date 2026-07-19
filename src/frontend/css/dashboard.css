@@ -1,0 +1,43 @@
+/*==========================================
+        QUICK ACTIONS
+==========================================*/
+
+.quick-card{
+
+    cursor:pointer;
+
+    border-radius:20px;
+
+    transition:all .35s ease;
+
+}
+
+.quick-card:hover{
+
+    transform:translateY(-10px);
+
+    box-shadow:0 18px 35px rgba(0,0,0,.15);
+
+}
+
+.icon-circle{
+
+    width:75px;
+
+    height:75px;
+
+    border-radius:50%;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    margin:auto;
+
+    color:#fff;
+
+    font-size:32px;
+
+}

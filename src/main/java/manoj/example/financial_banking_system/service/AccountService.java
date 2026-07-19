@@ -18,7 +18,6 @@ import manoj.example.financial_banking_system.repository.TransactionRepository;
 import manoj.example.financial_banking_system.repository.UserRepository;
 import manoj.example.financial_banking_system.dto.BalanceResponse;
 
-
 import java.time.LocalDateTime;
 
 import manoj.example.financial_banking_system.entity.Transaction;
@@ -106,8 +105,8 @@ public class AccountService {
                 return String.valueOf(number);
         }
 
-        // _----- method to perfrom deposit
-        // operation---------------------------------------
+        // ---------------- Deposit Money ----------------
+
         public DepositResponse depositMoney(DepositRequest request) {
 
                 // 1. Get Logged-in User
@@ -123,27 +122,36 @@ public class AccountService {
                 Account account = accountRepository.findByUser(user)
                                 .orElseThrow(() -> new RuntimeException("Account not found"));
 
-                // 4. Validate Amount
+                // ⭐ NEW VALIDATION
+                // 4. Check Account Status
+                if (account.getStatus() != AccountStatus.ACTIVE) {
+                        throw new RuntimeException("Your account is not active.");
+                }
+
+                // 5. Validate Deposit Amount
                 if (request.getAmount() <= 0) {
                         throw new RuntimeException("Invalid Amount");
                 }
 
-                // 5. Update Balance
-                account.setBalance(
-                                account.getBalance() + request.getAmount());
+                // 6. Update Balance
+                account.setBalance(account.getBalance() + request.getAmount());
 
-                // 6. Save Updated Account
+                // 7. Save Updated Account
                 accountRepository.save(account);
 
-                // 7. Save Transaction History
-                saveTransaction(account, TransactionType.DEPOSIT, request.getAmount());
+                // 8. Save Transaction History
+                saveTransaction(
+                                account,
+                                TransactionType.DEPOSIT,
+                                request.getAmount());
 
-                // 8. Return Response
+                // 9. Return Response
                 return new DepositResponse(
                                 "Amount Deposited Successfully",
                                 account.getBalance());
         }
 
+        // -----------Withdraw money method------------------------------------
         public WithdrawResponse withdrawMoney(WithdrawRequest request) {
 
                 // 1. Get Logged-in User
@@ -158,37 +166,40 @@ public class AccountService {
                 // 3. Find Account
                 Account account = accountRepository.findByUser(user)
                                 .orElseThrow(() -> new RuntimeException("Account not found"));
+                // 4. Check Account Status
+                if (account.getStatus() != AccountStatus.ACTIVE) {
+                        throw new RuntimeException("Account is not active");
+                }
 
-                // 4. Validate Amount
+                // 5. Validate Amount
                 if (request.getAmount() <= 0) {
                         throw new RuntimeException("Invalid Amount");
                 }
 
-                // 5. Check Balance
+                // 6. Check Balance
                 if (account.getBalance() < request.getAmount()) {
                         throw new RuntimeException("Insufficient Balance");
                 }
 
-                // 6. Withdraw Money
+                // 7. Withdraw Money
                 account.setBalance(
                                 account.getBalance() - request.getAmount());
 
-                // 7. Save Updated Account
+                // 8. Save Updated Account
                 accountRepository.save(account);
-                // 8.save transction history
+                // 9.save transction history
                 saveTransaction(
                                 account,
                                 TransactionType.WITHDRAW,
                                 request.getAmount());
 
-                // 8. Return Response
+                // 10. Return Response
                 return new WithdrawResponse(
                                 "Amount Withdrawn Successfully",
                                 account.getBalance());
         }
 
-        // ----------------Transfer money
-        // method--------------------------------------------------------------
+        // ---------------- Transfer Money ----------------
 
         @Transactional
         public TransferResponse transferMoney(TransferRequest request) {
@@ -210,6 +221,20 @@ public class AccountService {
                 Account receiverAccount = accountRepository
                                 .findByAccountNumber(request.getReceiverAccountNumber())
                                 .orElseThrow(() -> new RuntimeException("Receiver account not found"));
+
+                // ===========================
+                // NEW VALIDATION
+                // ===========================
+
+                // Sender account must be ACTIVE
+                if (senderAccount.getStatus() != AccountStatus.ACTIVE) {
+                        throw new RuntimeException("Your account is not active.");
+                }
+
+                // Receiver account must be ACTIVE
+                if (receiverAccount.getStatus() != AccountStatus.ACTIVE) {
+                        throw new RuntimeException("Receiver account is not active.");
+                }
 
                 // 5. Cannot transfer to own account
                 if (senderAccount.getAccountNumber()
@@ -241,10 +266,16 @@ public class AccountService {
                 accountRepository.save(senderAccount);
                 accountRepository.save(receiverAccount);
 
-                // 11. save transction history
+                // 11. Save Transaction History
                 saveTransaction(
                                 senderAccount,
                                 TransactionType.TRANSFER,
+                                request.getAmount());
+
+                // (Optional but Recommended)
+                saveTransaction(
+                                receiverAccount,
+                                TransactionType.DEPOSIT,
                                 request.getAmount());
 
                 // 12. Response
@@ -280,145 +311,131 @@ public class AccountService {
 
         }
 
-   //------------------     transcation list------------------------------------
+        // ------------------ transcation list------------------------------------
 
-   public List<StatementResponse> getMiniStatement() {
+        public List<StatementResponse> getMiniStatement() {
 
-    // 1. Logged-in User
-    Authentication authentication =
-            SecurityContextHolder.getContext().getAuthentication();
+                // 1. Logged-in User
+                Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-    String email = authentication.getName();
+                String email = authentication.getName();
 
-    // 2. Find User
-    User user = userRepository.findByEmail(email)
-            .orElseThrow(() ->
-                    new RuntimeException("User not found"));
+                // 2. Find User
+                User user = userRepository.findByEmail(email)
+                                .orElseThrow(() -> new RuntimeException("User not found"));
 
-    // 3. Find Account
-    Account account = accountRepository.findByUser(user)
-            .orElseThrow(() ->
-                    new RuntimeException("Account not found"));
+                // 3. Find Account
+                Account account = accountRepository.findByUser(user)
+                                .orElseThrow(() -> new RuntimeException("Account not found"));
 
-    // 4. Get Transactions
-    List<Transaction> transactions =
-            transactionRepository.findByAccount(account);
+                // 4. Get Transactions
+                List<Transaction> transactions = transactionRepository.findByAccount(account);
 
-    // 5. Convert Entity → DTO
-    List<StatementResponse> response = new ArrayList<>();
+                // 5. Convert Entity → DTO
+                List<StatementResponse> response = new ArrayList<>();
 
-    for (Transaction transaction : transactions) {
+                for (Transaction transaction : transactions) {
 
-        response.add(
-                new StatementResponse(
-                        transaction.getTransactionId(),
-                        transaction.getTransactionType(),
-                        transaction.getAmount(),
-                        transaction.getTransactionDate()
-                )
-        );
-    }
+                        response.add(
+                                        new StatementResponse(
+                                                        transaction.getTransactionId(),
+                                                        transaction.getTransactionType(),
+                                                        transaction.getAmount(),
+                                                        transaction.getTransactionDate()));
+                }
 
-    return response;
-}
+                return response;
+        }
 
-// ---------------check balance method--------------------------------------
+        // ---------------check balance method--------------------------------------
 
-public BalanceResponse checkBalance() {
+        public BalanceResponse checkBalance() {
 
-    // 1. Get Logged-in User
-    Authentication authentication =
-            SecurityContextHolder.getContext().getAuthentication();
+                // 1. Get Logged-in User
+                Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-    String email = authentication.getName();
+                String email = authentication.getName();
 
-    // 2. Find User
-    User user = userRepository.findByEmail(email)
-            .orElseThrow(() ->
-                    new RuntimeException("User not found"));
+                // 2. Find User
+                User user = userRepository.findByEmail(email)
+                                .orElseThrow(() -> new RuntimeException("User not found"));
 
-    // 3. Find Account
-    Account account = accountRepository.findByUser(user)
-            .orElseThrow(() ->
-                    new RuntimeException("Account not found"));
+                // 3. Find Account
+                Account account = accountRepository.findByUser(user)
+                                .orElseThrow(() -> new RuntimeException("Account not found"));
 
-    // 4. Return Balance
-    return new BalanceResponse(
-            account.getAccountNumber(),
-            account.getBalance()
-    );
-}
+                // 4. Return Balance
+                return new BalanceResponse(
+                                account.getAccountNumber(),
+                                account.getBalance());
+        }
 
-//----------Get account holder detail-------------------------------------------
+        // ----------Get account holder
+        // detail-------------------------------------------
 
-public AccountDetailsResponse getAccountDetails() {
+        public AccountDetailsResponse getAccountDetails() {
 
-    // 1. Get Logged-in User
-    Authentication authentication =
-            SecurityContextHolder.getContext().getAuthentication();
+                // 1. Get Logged-in User
+                Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-    String email = authentication.getName();
+                String email = authentication.getName();
 
-    // 2. Find User
-    User user = userRepository.findByEmail(email)
-            .orElseThrow(() ->
-                    new RuntimeException("User not found"));
+                // 2. Find User
+                User user = userRepository.findByEmail(email)
+                                .orElseThrow(() -> new RuntimeException("User not found"));
 
-    // 3. Find Account
-    Account account = accountRepository.findByUser(user)
-            .orElseThrow(() ->
-                    new RuntimeException("Account not found"));
+                // 3. Find Account
+                Account account = accountRepository.findByUser(user)
+                                .orElseThrow(() -> new RuntimeException("Account not found"));
 
-    // 4. Return Account Details
-    return new AccountDetailsResponse(
-            user.getFullName(),
-            user.getEmail(),
-            user.getPhone(),
-            account.getAccountNumber(),
-            account.getAccountType().name(),
-            account.getBalance(),
-            account.getStatus(),
-            account.getOpenDate()
-    );
-}
+                // 4. Return Account Details
+                return new AccountDetailsResponse(
+                                user.getFullName(),
+                                user.getEmail(),
+                                user.getPhone(),
+                                account.getAccountNumber(),
+                                account.getAccountType().name(),
+                                account.getBalance(),
+                                account.getStatus(),
+                                account.getOpenDate());
+        }
 
-// --------------close account method---------------------------
+        // --------------close account method---------------------------
 
-public CloseAccountResponse closeAccount() {
+        public CloseAccountResponse closeAccount() {
 
-    // 1. Get Logged-in User
-    Authentication authentication =
-            SecurityContextHolder.getContext().getAuthentication();
+                // 1. Get Logged-in User
+                Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-    String email = authentication.getName();
+                String email = authentication.getName();
 
-    // 2. Find User
-    User user = userRepository.findByEmail(email)
-            .orElseThrow(() ->
-                    new RuntimeException("User not found"));
+                // 2. Find User
+                User user = userRepository.findByEmail(email)
+                                .orElseThrow(() -> new RuntimeException("User not found"));
 
-    // 3. Find Account
-    Account account = accountRepository.findByUser(user)
-            .orElseThrow(() ->
-                    new RuntimeException("Account not found"));
+                // 3. Find Account
+                Account account = accountRepository.findByUser(user)
+                                .orElseThrow(() -> new RuntimeException("Account not found"));
 
-    // 4. Check if already closed
-    if (account.getStatus() == AccountStatus.CLOSED) {
-        throw new RuntimeException("Account is already closed");
-    }
+                // 4. Check if already closed
+                if (account.getStatus() == AccountStatus.CLOSED) {
+                        throw new RuntimeException("Account is already closed");
+                }
 
-    // 5. Close Account
-    account.setStatus(AccountStatus.CLOSED);
+                // 5. Close Account
+                account.setStatus(AccountStatus.CLOSED);
+                if (account.getBalance() > 0) {
+                        throw new RuntimeException(
+                                        "Withdraw all balance before closing account");
+                }
 
-    // 6. Save
-    accountRepository.save(account);
+                // 6. Save
+                accountRepository.save(account);
 
-    // 7. Return Response
-    return new CloseAccountResponse(
-            "Account Closed Successfully",
-            account.getStatus().name()
-    );
-}
-
+                // 7. Return Response
+                return new CloseAccountResponse(
+                                "Account Closed Successfully",
+                                account.getStatus().name());
+        }
 
 }

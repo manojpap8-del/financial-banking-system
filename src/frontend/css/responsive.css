@@ -1,0 +1,159 @@
+/*==========================================
+        TABLET RESPONSIVE
+==========================================*/
+
+@media (max-width:992px){
+
+.hero-section{
+
+    text-align:center;
+
+    padding:80px 0;
+
+}
+
+.hero-section h1{
+
+    font-size:3rem;
+
+}
+
+.hero-section p{
+
+    margin:auto;
+
+}
+
+.hero-section img{
+
+    margin-top:50px;
+
+}
+
+section{
+
+    padding:80px 0 !important;
+
+}
+
+}
+
+/*==========================================
+        MOBILE RESPONSIVE
+==========================================*/
+
+@media (max-width:768px){
+
+.hero-section h1{
+
+    font-size:2.4rem;
+
+}
+
+.hero-section p{
+
+    font-size:1rem;
+
+}
+
+.display-4{
+
+    font-size:2rem !important;
+
+}
+
+h2{
+
+    font-size:2rem !important;
+
+}
+
+.card{
+
+    margin-bottom:25px;
+
+}
+
+.btn{
+
+    width:100%;
+
+}
+
+footer{
+
+    text-align:center;
+
+}
+
+.social-icons{
+
+    justify-content:center;
+
+}
+
+}
+
+/*==========================================
+        SMALL MOBILE
+==========================================*/
+
+@media (max-width:576px){
+
+.navbar-brand{
+
+    font-size:1.4rem;
+
+}
+
+.hero-section{
+
+    padding:60px 0;
+
+}
+
+.hero-section h1{
+
+    font-size:2rem;
+
+}
+
+.hero-section img{
+
+    max-width:320px;
+
+}
+
+#statistics h1{
+
+    font-size:2.3rem;
+
+}
+
+footer h3{
+
+    font-size:1.6rem;
+
+}
+
+}
+
+/*==========================================
+        LARGE SCREEN
+==========================================*/
+
+@media (min-width:1400px){
+
+.container{
+
+    max-width:1320px;
+
+}
+
+.hero-section h1{
+
+    font-size:4.5rem;
+
+}
+
+}

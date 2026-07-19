@@ -1,0 +1,411 @@
+/*==========================================
+            GLOBAL
+==========================================*/
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+
+    font-family: 'Poppins', sans-serif;
+
+    background: #F4F7FC;
+
+    overflow-x: hidden;
+
+}
+
+/*==========================================
+            WRAPPER
+==========================================*/
+
+.wrapper {
+
+    display: flex;
+
+    min-height: 100vh;
+
+}
+
+/*==========================================
+            SIDEBAR
+==========================================*/
+
+.sidebar {
+
+    width: 260px;
+
+    background: #0B1F3A;
+
+    color: white;
+
+    padding: 30px 20px;
+
+    position: fixed;
+
+    left: 0;
+
+    top: 0;
+
+    bottom: 0;
+
+}
+
+.logo {
+
+    text-align: center;
+
+    margin-bottom: 50px;
+
+}
+
+.logo h2 {
+
+    font-weight: bold;
+
+    color: #ffffff;
+
+}
+
+.logo small {
+
+    color: #bfc9d4;
+
+    font-size: 14px;
+
+}
+
+.sidebar ul {
+
+    list-style: none;
+
+    padding-left: 0;
+
+}
+
+.sidebar ul li {
+
+    padding: 15px 18px;
+
+    margin-bottom: 12px;
+
+    border-radius: 12px;
+
+    cursor: pointer;
+
+    transition: .3s;
+
+    font-size: 16px;
+
+}
+
+.sidebar ul li i {
+
+    margin-right: 12px;
+
+}
+
+.sidebar ul li:hover {
+
+    background: #0D6EFD;
+
+}
+
+.sidebar ul li.active {
+
+    background: #0D6EFD;
+
+}
+
+.sidebar ul li:last-child {
+
+    margin-top: 80px;
+
+    background: #DC3545;
+
+}
+
+.sidebar ul li:last-child:hover {
+
+    background: #BB2D3B;
+
+}
+
+/*==========================================
+            MAIN CONTENT
+==========================================*/
+
+.main-content {
+
+    margin-left: 260px;
+
+    width: 100%;
+
+    padding: 30px;
+
+}
+
+/*==========================================
+            NAVBAR
+==========================================*/
+
+.top-navbar {
+
+    background: white;
+
+    border-radius: 15px;
+
+    padding: 20px 30px;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    box-shadow: 0 8px 20px rgba(0, 0, 0, .08);
+
+    margin-bottom: 30px;
+
+}
+
+.top-navbar h3 {
+
+    margin: 0;
+
+    font-weight: 600;
+
+}
+
+#adminName {
+
+    font-weight: 600;
+
+}
+
+/*==========================================
+        WELCOME SECTION
+==========================================*/
+
+.welcome-section {
+
+    margin-bottom: 35px;
+
+}
+
+.welcome-section h2 {
+
+    font-weight: 700;
+
+    color: #1d3557;
+
+}
+
+.welcome-section p {
+
+    color: #6c757d;
+
+}
+
+/*==========================================
+            DASHBOARD CARDS
+==========================================*/
+
+.dashboard-card {
+
+    background: white;
+
+    border-radius: 18px;
+
+    padding: 25px;
+
+    text-align: center;
+
+    box-shadow: 0 10px 25px rgba(0, 0, 0, .08);
+
+    transition: .3s;
+
+}
+
+.dashboard-card:hover {
+
+    transform: translateY(-8px);
+
+    box-shadow: 0 18px 35px rgba(0, 0, 0, .12);
+
+}
+
+.dashboard-card i {
+
+    font-size: 42px;
+
+    color: #0D6EFD;
+
+    margin-bottom: 15px;
+
+}
+
+.dashboard-card h5 {
+
+    color: #6c757d;
+
+    margin-bottom: 15px;
+
+}
+
+.dashboard-card h2 {
+
+    font-size: 34px;
+
+    font-weight: 700;
+
+    color: #1d3557;
+
+}
+
+/*==========================================
+            TABLE
+==========================================*/
+
+.table-section {
+
+    background: white;
+
+    padding: 25px;
+
+    border-radius: 18px;
+
+    box-shadow: 0 10px 25px rgba(0, 0, 0, .08);
+
+}
+
+.table {
+
+    margin-top: 15px;
+
+}
+
+.table thead {
+
+    background: #0D6EFD;
+
+    color: white;
+
+}
+
+.table th {
+
+    border: none;
+
+}
+
+.table td {
+
+    vertical-align: middle;
+
+}
+
+/*==========================================
+            BUTTON
+==========================================*/
+
+.btn-primary {
+
+    border-radius: 10px;
+
+    padding: 10px 20px;
+
+    font-weight: 600;
+
+}
+
+/*==========================================
+            SCROLLBAR
+==========================================*/
+
+::-webkit-scrollbar {
+
+    width: 8px;
+
+}
+
+::-webkit-scrollbar-thumb {
+
+    background: #0D6EFD;
+
+    border-radius: 20px;
+
+}
+
+/*==========================================
+            RESPONSIVE
+==========================================*/
+
+@media(max-width:992px) {
+
+    .sidebar {
+
+        width: 90px;
+
+    }
+
+    .logo h2 {
+
+        font-size: 22px;
+
+    }
+
+    .logo small {
+
+        display: none;
+
+    }
+
+    .sidebar ul li {
+
+        text-align: center;
+
+    }
+
+    .sidebar ul li i {
+
+        margin: 0;
+
+        font-size: 22px;
+
+    }
+
+    .sidebar ul li {
+
+        font-size: 0;
+
+    }
+
+    .main-content {
+
+        margin-left: 90px;
+
+    }
+
+}
+
+@media(max-width:768px) {
+
+    .top-navbar {
+
+        flex-direction: column;
+
+        gap: 15px;
+
+    }
+
+    .dashboard-card {
+
+        margin-bottom: 20px;
+
+    }
+
+}

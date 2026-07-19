@@ -11,6 +11,9 @@ import manoj.example.financial_banking_system.dto.LoginRequest;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.CrossOrigin;
+
+@CrossOrigin(origins = "*")
 
 @RestController
 @RequestMapping("/api/users")

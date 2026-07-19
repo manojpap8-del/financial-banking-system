@@ -13,4 +13,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     // Check duplicate email
     boolean existsByEmail(String email);
 
+    // ✅ Add this
+    boolean existsByPhone(String phone);
 }

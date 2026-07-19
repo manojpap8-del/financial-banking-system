@@ -1,0 +1,123 @@
+/* ==========================================
+   GOOGLE FONT & RESET
+========================================== */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html{
+
+    scroll-behavior:smooth;
+
+}
+html{
+    scroll-behavior:smooth;
+}
+
+
+body{
+
+    font-family:'Poppins',sans-serif;
+    background:#f8fbff;
+    color:#1f2937;
+    line-height:1.6;
+}
+
+/* ==========================================
+   COLOR VARIABLES
+========================================== */
+
+:root{
+
+    --primary:#0d6efd;
+
+    --secondary:#ffc107;
+
+    --dark:#0f172a;
+
+    --light:#ffffff;
+
+    --gray:#6b7280;
+
+    --background:#f8fbff;
+
+    --shadow:0 10px 30px rgba(0,0,0,.08);
+
+    --radius:14px;
+
+    --transition:.35s ease;
+
+}
+
+/* ==========================================
+   LINKS
+========================================== */
+
+a{
+
+    text-decoration:none;
+    transition:var(--transition);
+
+}
+
+/* ==========================================
+   BUTTON
+========================================== */
+
+.btn{
+
+    border-radius:50px;
+    padding:12px 28px;
+    font-weight:600;
+    transition:var(--transition);
+
+}
+
+/* ==========================================
+   SECTION
+========================================== */
+
+section{
+
+    padding:90px 0;
+
+}
+
+/* ==========================================
+   IMAGE
+========================================== */
+
+img{
+
+    max-width:100%;
+
+    display:block;
+
+}
+
+/* ==========================================
+   SCROLLBAR
+========================================== */
+
+::-webkit-scrollbar{
+
+    width:10px;
+
+}
+
+::-webkit-scrollbar-thumb{
+
+    background:var(--primary);
+
+    border-radius:20px;
+
+}
+
+::-webkit-scrollbar-track{
+
+    background:#e5e7eb;
+
+}
